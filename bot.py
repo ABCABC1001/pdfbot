@@ -12,7 +12,11 @@ from tgbot.handlers.echo import register_echo
 from tgbot.handlers.user import register_user
 from tgbot.middlewares.environment import EnvironmentMiddleware
 
+from dotenv import load_dotenv
+
 logger = logging.getLogger(__name__)
+
+PROXY_URL = "http://proxy.server:3128"
 
 
 def register_all_middlewares(dp, config):
@@ -39,7 +43,7 @@ async def main():
     config = load_config(".env")
 
     storage = RedisStorage2() if config.tg_bot.use_redis else MemoryStorage()
-    bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
+    bot = Bot(token=config.tg_bot.token, proxy=PROXY_URL, parse_mode='HTML')
     dp = Dispatcher(bot, storage=storage)
 
     bot['config'] = config
